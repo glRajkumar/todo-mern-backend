@@ -8,7 +8,7 @@ let auth = require('../middlewares/auth')
 router.post('/register', (req,res)=>{
     let {name, email, password} = req.body
 
-    let user = new User({email , name, password : hash})
+    let user = new User({email , name, password})
        
     user.save().then(()=>{
         res.send("User Saved successfully")
@@ -44,18 +44,21 @@ router.post('/login', (req, res)=>{
     User.findOne({email})
     .then((user)=>{
     //console.log(user)
-       
-    let payload = {userId : user._id}
-    let token = jwt.sign(payload, "secret", {expiresIn : '18h'})
-
-    user.token = user.token.concat([token])
-
-    user.save().then(()=>{
-          res.send({token})
-    })
-    .catch(err => {
-        res.status(400).send('Token not saved to DB')
-    })
+    if(password === user.password){
+        let payload = {userId : user._id}
+        let token = jwt.sign(payload, "secret", {expiresIn : '18h'})
+    
+        user.token = user.token.concat([token])
+    
+        user.save().then(()=>{
+              res.send({token})
+        })
+        .catch(err => {
+            res.status(400).send('Token not saved to DB')
+        })
+    }else{
+        res.send("not matched with pass")
+    }
     })
     .catch((error)=>{
      res.status(401).send("cannot find user in db")
