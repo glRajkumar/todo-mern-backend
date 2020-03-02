@@ -20,14 +20,14 @@ router.post('/', auth, (req, res)=>{
     })
 })
 
-router.put('/', (req, res)=>{
+router.put('/', auth, (req, res)=>{
     let {id} = req.body
     ToDo.findOneAndUpdate({"_id": id}, {done: true})
     .then(()=>{res.send("ToDo is Updated")})
     .catch((err)=>{res.status(400).send(err)}) 
 })
 
-router.delete('/', (req, res)=>{
+router.delete('/', auth, (req, res)=>{
     let {id} = req.body
     ToDo.findByIdAndDelete({"_id": id})
     .then(()=>{res.send("ToDo is deleted")})

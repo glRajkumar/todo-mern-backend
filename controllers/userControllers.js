@@ -49,7 +49,7 @@ router.post('/login', (req, res)=>{
             user.token = user.token.concat([token])
         
             user.save().then(()=>{
-                  res.send([{token}, {userId}])
+                  res.send({token})
             })
             .catch(err => {
                 res.status(400).send('Token not saved to DB')
