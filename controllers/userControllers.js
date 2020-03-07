@@ -45,7 +45,7 @@ router.post('/login', (req, res)=>{
             let payload = {userId : user._id}
             let token = jwt.sign(payload, "secret", {expiresIn : '18h'})
         
-            user.token = user.token.push(token)
+            user.token = user.token.concat(token)
         
             user.save().then(()=>{
                   res.send(token)
