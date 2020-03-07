@@ -37,7 +37,6 @@ router.post('/login', (req, res)=>{
     User.findOne({email})
     .then((user)=>{
     //console.log(user)
-
     bcrypt.compare(password, user.password, (err, result)=>{
         if(err){
             res.send("err in bcrypt")
@@ -46,16 +45,14 @@ router.post('/login', (req, res)=>{
             let payload = {userId : user._id}
             let token = jwt.sign(payload, "secret", {expiresIn : '18h'})
         
-            user.token = user.token.concat([token])
+            user.token = user.token.push(token)
         
             user.save().then(()=>{
-                  res.send({token})
+                  res.send(token)
             })
             .catch(err => {
                 res.status(400).send('Token not saved to DB')
             })
-        }else{
-            res.send("not matched with pass")
         }
     })
     })
