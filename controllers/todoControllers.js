@@ -11,6 +11,15 @@ router.get('/', auth, (req, res)=>{
     .catch((err)=>{res.status(400).send(err)})
 })
 
+router.get('/editid/:id', auth, (req, res)=>{
+    let userId = req.user._id
+    let id = req.params.id
+
+    ToDo.find({"creator": userId, "_id": id})
+    .then((todo)=>{res.send(todo)})
+    .catch((err)=>{res.status(400).send(err)})
+})
+
 router.get('/finished', auth, (req, res)=>{
     let userId = req.user._id
 
@@ -28,8 +37,7 @@ router.post('/', auth, (req, res)=>{
     let todo = new ToDo({title, description, creator, createDateTime, done})
 
     todo.save().then(()=>{
-        res.json(todo)
-        // res.send("ToDo is added Successfully")
+        res.send("ToDo is added Successfully")
     })
     .catch((error)=>{
        res.status(400).send(err)
